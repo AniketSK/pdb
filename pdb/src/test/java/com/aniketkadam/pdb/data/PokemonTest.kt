@@ -1,7 +1,6 @@
 package com.aniketkadam.pdb.data
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.junit.Test
 import com.squareup.moshi.Types
 
@@ -10,7 +9,6 @@ class PokemonTest {
     @Test
     fun what() {
         val moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory())
             .build()
 
         val type = Types.newParameterizedType(List::class.java, Pokemon::class.java)
