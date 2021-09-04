@@ -14,9 +14,9 @@ class PokemonTest {
         val type = Types.newParameterizedType(List::class.java, Pokemon::class.java)
         val adapter = moshi.adapter<List<Pokemon>>(type)
 
-        val pokemon: List<Pokemon>? = adapter.fromJson(getTextInFile("all.json"))
+        val pokemon: List<Pokemon> = adapter.fromJson(getTextInFile("all.json")!!)!!
 
-        assert(pokemon?.size ?: 0 > 0)
+        assert(pokemon.size > 0)
     }
 }
 
