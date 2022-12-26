@@ -112,7 +112,7 @@ afterEvaluate {
                 pom {
                     // Only sign the artefacts if this is a maven central build.
                     // This would only halt jitpack builds and/or make our signing keys public.
-                    if(rootProject.properties["ossrhUsername"]) {
+                    if(rootProject.properties["ossrhPassword"]) {
 //                        artifact fakeSources
 
                         artifact androidSourcesJar
