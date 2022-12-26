@@ -7,7 +7,7 @@ plugins {
     id('org.jetbrains.dokka')
 }
 
-def getVersionName() {
+def getVersionName(e) {
     return "$SDK_COMMON_VERSION_NAME"
 }
 
@@ -144,9 +144,9 @@ afterEvaluate {
                         url = 'https://github.com/aniketsk/pdb/tree/main'
                     }
                 }
-                groupId = getGroup(null)
+                groupId = getGroup()
                 artifactId = 'core'
-                version = getVersionName(null)
+                version = getVersionName()
             }
 
             //            // Creates a Maven publication called “debug”.
