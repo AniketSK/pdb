@@ -92,10 +92,15 @@ task androidSourcesJar(type: Jar) {
     }
 }
 
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    archiveFileName = "javadoc.jar"
+    from "build/dokka/javadoc"
+    archiveClassifier.set("javadoc")
+}
+
 artifacts {
     archives androidSourcesJar
 }
-
 
 afterEvaluate {
     publishing {
@@ -139,9 +144,9 @@ afterEvaluate {
                         url = 'https://github.com/aniketsk/pdb/tree/main'
                     }
                 }
-                groupId = getGroup()
-                artifactId = 'pdb'
-                version = getVersionName()
+                groupId = getGroup(null)
+                artifactId = 'core'
+                version = getVersionName(null)
             }
 
             //            // Creates a Maven publication called “debug”.
