@@ -1,0 +1,151 @@
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("maven-publish")
+    id("signing")
+}
+def getVersionName = { ->
+    return "0.0.1"
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
+        }
+    }
+
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20")
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    // Room
+    def room_version = "2.4.3"
+    implementation("androidx.room:room-runtime:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+
+
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:$room_version")
+
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.12.0")
+    implementation("com.squareup.moshi:moshi:1.12.0")
+
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        // For Android libraries
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        // For pure Kotlin libraries, in case you have them
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+
+                pom {
+                    // Only sign the artefacts if this is a maven central build.
+                    // This would only halt jitpack builds and/or make our signing keys public.
+                    if(rootProject.properties["ossrhUsername"]) {
+//                        artifact fakeSources
+
+                        artifact androidSourcesJar
+                        artifact javadocJar
+
+                        signing {
+                            sign publishing.publications
+                        }
+                    }
+                    name = "Pokemon database"
+                    description = "Provides a database of pokemon."
+                    url = "https://github.com/aniketsk/pdb"
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'http://www.opensource.org/licenses/mit-license.php'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = '1'
+                            name = 'Aniket Kadam'
+                            email = 'anikadamg+pdb@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/aniketsk/pdb.git'
+                        developerConnection = 'scm:git:ssh://github.com:aniketsk/pdb.git'
+                        url = 'https://github.com/aniketsk/pdb/tree/main'
+                    }
+                }
+                groupId = getGroup()
+                artifactId = 'pdb'
+                version = getVersionName()
+            }
+
+            //            // Creates a Maven publication called “debug”.
+//            debug(MavenPublication) {
+//                // Applies the component for the debug build variant.
+//                from components.debug
+//
+//                groupId = group
+//                artifactId = 'pdb-debug'
+//                version = version
+//            }
+        }
+    }
+}
+
