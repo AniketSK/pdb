@@ -4,9 +4,15 @@ plugins {
     id("kotlin-kapt")
     id("maven-publish")
     id("signing")
+    id('org.jetbrains.dokka')
 }
-def getVersionName = { ->
-    return "0.0.1"
+
+def getVersionName() {
+    return "$SDK_COMMON_VERSION_NAME"
+}
+
+def getVersionCode() {
+    return $SDK_COMMON_VERSION_CODE
 }
 
 android {
@@ -16,8 +22,8 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode getVersionCode()
+        versionName getVersionName()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
