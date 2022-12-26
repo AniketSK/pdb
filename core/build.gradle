@@ -10,6 +10,7 @@ def getVersionName = { ->
 }
 
 android {
+    namespace 'com.aniketkadam.pdb'
     compileSdk 33
 
     defaultConfig {
