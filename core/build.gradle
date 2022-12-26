@@ -144,7 +144,7 @@ afterEvaluate {
                         url = 'https://github.com/aniketsk/pdb/tree/main'
                     }
                 }
-                groupId = getGroup()
+                groupId = "$sdkGroup"
                 artifactId = 'core'
                 version = getVersionName()
             }
