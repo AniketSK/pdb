@@ -28,7 +28,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    # This can often be used as a testing ground
+    # (optional) This could be used as a testing ground
     - name: Deploy to Maven Central io.github.aniketsk (Sonatype)
       run: ./gradlew clean publishToSonatype -PhmsSdkGroup="io.github.aniketsk" -PHMS_ANDROID_SDK_COMMON_VERSION_NAME="${{github.ref_name}}" -PossrhPassword="${{ secrets.ANDROID_SONATYPE_PASSWORD}}" -Psigning.password="${{ secrets.ANDROID_SONATYPE_PRIVATE_KEY_SIGNING_PASSWORD }}"
 
