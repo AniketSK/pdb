@@ -20,15 +20,18 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-
+    # The private key used to sign releases is checked in encrypted
+    #   then decrypted on the fly to be used to sign artefacts.
     - name: Decrypt the artefact signing key
       run: gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.ANDROID_SONATYPE_PRIVATE_KEY_DECRYPT_PASSWORD }}" --output secrets/private.key secrets/private.key.gpg
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Deploy to Maven Central io.github.com (Sonatype)
+    # This can often be used as a testing ground
+    - name: Deploy to Maven Central io.github.aniketsk (Sonatype)
       run: ./gradlew clean publishToSonatype -PhmsSdkGroup="io.github.aniketsk" -PHMS_ANDROID_SDK_COMMON_VERSION_NAME="${{github.ref_name}}" -PossrhPassword="${{ secrets.ANDROID_SONATYPE_PASSWORD}}" -Psigning.password="${{ secrets.ANDROID_SONATYPE_PRIVATE_KEY_SIGNING_PASSWORD }}"
 
-    - name: Deploy to Maven Central com.aniketkadam (Sonatype)
+    # The final release to your domain name
+    - name: Deploy to Maven Central com.aniketkadam.pdb (Sonatype)
       run: ./gradlew clean publishToSonatype -PhmsSdkGroup="com.aniketkadam.pdb" -PHMS_ANDROID_SDK_COMMON_VERSION_NAME="${{github.ref_name}}" -PossrhPassword="${{ secrets.ANDROID_SONATYPE_PASSWORD}}" -Psigning.password="${{ secrets.ANDROID_SONATYPE_PRIVATE_KEY_SIGNING_PASSWORD }}"
